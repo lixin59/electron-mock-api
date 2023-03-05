@@ -1,6 +1,6 @@
 <template>
   <dark-mode-container class="flex-center h-full">
-    <span>Copyright ©2021 Soybean Admin</span>
+    <span>Copyright ©2021 Mock Admin</span>
   </dark-mode-container>
 </template>
 

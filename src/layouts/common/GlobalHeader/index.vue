@@ -11,7 +11,6 @@
       <github-site />
       <full-screen />
       <theme-mode />
-      <system-message />
       <setting-button v-if="showButton" />
       <user-avatar />
     </div>
@@ -30,7 +29,7 @@ import {
   HeaderMenu,
   MenuCollapse,
   SettingButton,
-  SystemMessage,
+  // SystemMessage,
   ThemeMode,
   UserAvatar
 } from './components';

@@ -15,7 +15,7 @@ export default defineConfig(configEnv => {
   const isServe = configEnv.command === 'serve';
   const isBuild = configEnv.command === 'build';
   const sourcemap = isServe || Boolean(process.env.VSCODE_DEBUG);
-  const dependencies: Object = 'dependencies' in pkg ? pkg.dependencies : Object.create({});
+  const dependencies: Record<string, any> = 'dependencies' in pkg ? pkg.dependencies : Object.create({});
 
   return {
     resolve: {
@@ -34,6 +34,7 @@ export default defineConfig(configEnv => {
           entry: 'electron/main/index.ts',
           onstart(options) {
             if (process.env.VSCODE_DEBUG) {
+              // eslint-disable-next-line no-console
               console.log(/* For `.vscode/.debug.script.mjs` */ '[startup] Electron App');
             } else {
               options.startup();

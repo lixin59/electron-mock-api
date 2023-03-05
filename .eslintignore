@@ -4,3 +4,4 @@ router-page.d.ts
 *.svg
 dist-electron/
 dist/
+*.md

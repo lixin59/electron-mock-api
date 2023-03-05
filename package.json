@@ -1,8 +1,8 @@
 {
-  "name": "electron-vite-vue-admin",
+  "name": "mock-admin",
   "version": "0.9.9",
   "main": "dist-electron/main/index.js",
-  "description": "一个基于Vue3、Vite3、TypeScript、NaiveUI and UnoCSS的清新优雅的中后台模版electron版本。",
+  "description": "一个基于Vue3、Vite3、TypeScript、NaiveUI and UnoCSS的清新优雅的mock管理系统。",
   "author": {
     "name": "linxin59",
 		"email": "14533287107@qq.com",

@@ -53,6 +53,7 @@ export function newDefaultConfig(oldObj: any, newObj: any) {
       }
     });
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.log('修改配置文件失败', e);
     return false;
   }
@@ -97,6 +98,7 @@ export function isDifference(o1: object, o2: object): boolean {
       }
       return flag;
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log('对比时出错', e);
       return false;
     }

@@ -4,23 +4,22 @@
 
 ## 简介
 
-[electron-vite-vue-admin](https://github.com/lixin59/electron-vite-vue-admin/issues) 是一个管理系统的electron版本
+[electron-mock-admin](https://github.com/lixin59/electron-mock-api) 是一个Mock Api 管理系统
 
 ## 特性
 1. 日志记录
 2. 本地配置存储
 
-
 ## 文档
 
-- [项目文档: 待更新](https://github.com/lixin59/electron-vite-vue-admin/issues)
+- [项目文档: 待更新](https://github.com/lixin59/electron-mock-api)
 
 ## 项目示例图
 
 ## 安装使用
 
 - 环境配置
-	**本地环境需要安装 pnpm 7.x 、Node.js 14.18+ 和 Git**
+	**本地环境需要安装 pnpm 7.x 、Node.js 16+ 和 Git**
 
 - 安装依赖
 
@@ -42,7 +41,7 @@ pnpm build
 
 ## 如何贡献
 
-非常欢迎您的加入！[提一个 Issue](https://github.com/lixin59/electron-vite-vue-admin/issues) 或者提交一个 Pull Request。
+非常欢迎您的加入！[提一个 Issue](https://github.com/lixin59/electron-mock-api/issues) 或者提交一个 Pull Request。
 
 ## Git 贡献提交规范
 

@@ -1,6 +1,4 @@
-<template>
-  <exception-base type="500" />
-</template>
+<template>接口管理</template>
 
 <script lang="ts" setup></script>
 

@@ -16,7 +16,7 @@ defineOptions({ name: 'GithubSite' });
 
 const theme = useThemeStore();
 function handleClickLink() {
-  window.open('https://github.com/honghuangdc/soybean-admin', '_blank');
+  window.open('https://github.com/lixin59/electron-mock-api', '_blank');
 }
 </script>
 
