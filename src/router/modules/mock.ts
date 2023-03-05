@@ -4,8 +4,8 @@ const functionRoute: AuthRoute.Route = {
   component: 'basic',
   children: [
     {
-      name: 'mock_list',
-      path: '/mock/list',
+      name: 'mock_projects',
+      path: '/mock/projects',
       component: 'self',
       meta: {
         title: '接口管理',

@@ -1,10 +1,55 @@
+import net from 'net';
 import { ipcMain, shell } from 'electron';
 import type { BrowserWindow } from 'electron';
+import { mockService, mockServiceMethod } from '../utils/mock';
 import { lError, Info, Warn, Success, Query } from '../utils/logger';
 import { getAppPathMain, mkFilePathMain, getImageWithDefaultMain } from '../utils/appDir';
 import getConfig, { setConfigFile, setConfigFileAll } from '../config/index';
 
+// 检测端口是否可用
+function checkPortUsable(port: number) {
+  return new Promise(resolve => {
+    const server = net.createConnection({ port });
+    server.on('connect', () => {
+      server.end();
+      resolve({ port, usable: false, msg: `Port ${port} is not available!` });
+    });
+    server.on('error', () => {
+      resolve({ port, usable: true });
+    });
+  });
+}
+
 export default function initIpcMain(mainWindow: BrowserWindow) {
+  // eslint-disable-next-line consistent-return
+  ipcMain.handle('ipc-mockService', async (_e, args: { type: 'add' | 'remove' | 'write'; data: any }) => {
+    try {
+      const { data, type } = args;
+      if (mockServiceMethod[type]) {
+        return mockServiceMethod[type](data);
+      }
+    } catch (e: any) {
+      lError(`mockService异常`, e);
+    }
+  });
+  // eslint-disable-next-line consistent-return
+  ipcMain.handle('ipc-checkPortUsable', async (_e, data) => {
+    try {
+      const res = await checkPortUsable(data.port);
+      return res;
+    } catch (e: any) {
+      lError(`检测端口时异常`, e);
+    }
+  });
+  // eslint-disable-next-line consistent-return
+  ipcMain.handle('ipc-getMockProjects', async _e => {
+    try {
+      return mockService.getProjectList();
+    } catch (e: any) {
+      lError(`获取mock项目配置失败`, e);
+    }
+  });
+
   // eslint-disable-next-line consistent-return
   ipcMain.handle('ipc-getAppPath', async (_e, data) => {
     const { dir } = data;

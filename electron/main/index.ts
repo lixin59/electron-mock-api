@@ -80,12 +80,11 @@ async function createWindow() {
     if (details.url.startsWith('https:')) shell.openExternal(details.url);
     return { action: 'deny' };
   });
+  CreateDailyLogger();
+  Info('main程序已启动...', { at: 'main' });
+  checkConfigFile();
+  initIpcMain(win);
 }
-CreateDailyLogger();
-Info('main程序已启动...', { at: 'main' });
-checkConfigFile();
-if (win) initIpcMain(win);
-
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {

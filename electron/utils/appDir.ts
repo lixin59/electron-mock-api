@@ -1,10 +1,10 @@
 import fs from 'fs';
-import path from 'path';
+import path, { sep } from 'path';
 import os from 'os';
 import fse from 'fs-extra';
 
 export const getAppDirectoryMain = () => {
-  let dir = path.join(os.homedir(), '.viteAdmin');
+  let dir = path.join(os.homedir(), '.app-mock-admin');
   if (process.platform === 'darwin') {
     dir = process.execPath.substring(0, process.execPath.indexOf('.app') + 4);
   }
@@ -15,7 +15,8 @@ export const getAppDirectoryMain = () => {
   return dir;
 };
 
-export const getAppPathMain = (dir:string) => path.join(getAppDirectoryMain(), dir);
+export const getAppPathMain = (dir: string) => path.join(getAppDirectoryMain(), dir);
+export const getProjectPath = () => getAppPathMain('projects').split(sep).join('/');
 
 export const mkFilePathMain = (pathName: string) => {
   const filePath = pathName;
@@ -26,7 +27,7 @@ export const mkFilePathMain = (pathName: string) => {
   return filePath;
 };
 
-function getFile(dir:string, options = {}) {
+function getFile(dir: string, options = {}) {
   return new Promise((resolve, reject) => {
     try {
       fs.readFile(dir, options, (err, data) => {
@@ -41,7 +42,7 @@ function getFile(dir:string, options = {}) {
   });
 }
 
-export async function getImageWithDefaultMain(name:string) {
+export async function getImageWithDefaultMain(name: string) {
   const fileTypes = ['.jpg', '.png', '.jpeg'];
   let filePath = '';
   let imagePrefix = 'data:image/jpg;base64,';

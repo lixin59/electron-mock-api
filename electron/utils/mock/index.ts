@@ -1,0 +1,170 @@
+import { resolve } from 'path';
+import fs from 'fs';
+import type { Server } from 'http';
+import Koa from 'koa';
+import Router from 'koa-router';
+import { globSync } from 'glob'; // glob 支持文件遍历查寻
+// import logger from 'koa-logger'; // koa-logger 实现在终端打印node日志，方便调试
+import Mock from 'mockjs';
+import type { IMockServer, tMockProject, Method, IMockService } from '~/electron/utils/mock/types';
+import { lError, Info } from '../logger';
+import { getProjectPath } from '../appDir';
+
+class MockServer implements IMockServer {
+  methodMap: Record<Method, Method> = {
+    get: 'get',
+    post: 'post',
+    delete: 'delete',
+    put: 'put',
+    head: 'head',
+    link: 'link',
+    options: 'options',
+    patch: 'patch',
+    unlink: 'unlink'
+  };
+
+  project: tMockProject;
+
+  server: Server;
+
+  constructor(project: tMockProject) {
+    this.project = project;
+    const app = new Koa();
+    const router = new Router({ prefix: `${project.config.baseUrl}` });
+    // app.use(logger());
+    this.project.mockList.forEach(({ enable, method, data, url }) => {
+      if (enable && this.methodMap[method]) {
+        router[method](url, (ctx: any) => {
+          // 从ctx中读取get传值
+          // console.log("ctx.query: ", ctx.query); // { aid: '123' } 获取的是对象 用的最多的方式  **推荐**
+          // console.log("ctx.querystring: ", ctx.querystring); // aid=123&name=zhangsan  获取的是一个字符串
+          // console.log("ctx.url: ", ctx.url); // 获取url地址
+
+          // // ctx 里面的 request 里面获取 get 传值
+          // console.log(ctx.request.url);
+          // console.log(ctx.request.query); // { aid: '123', name: 'zhangsan' } 对象
+          // console.log(ctx.request.querystring); // aid=123&name=zhangsan
+
+          const resData = Mock.mock(data);
+          try {
+            ctx.body = resData;
+          } catch (err: any) {
+            lError(`服务器错误${project.config.port}`, err);
+            ctx.body = {
+              status: 404,
+              type: 'false'
+            };
+            ctx.throw('服务器错误: ', 500);
+          }
+        });
+      }
+    });
+    app.use(router.routes()).use(router.allowedMethods());
+    const { port } = this.project.config;
+    const server = app.listen(port, () => {
+      Info(`app started at port ${port}...`);
+    });
+    this.server = server;
+  }
+
+  clear() {
+    this.server?.closeAllConnections();
+    this.server?.closeIdleConnections();
+    this.server?.close(() => {
+      Info('服务器关闭', { at: 'MockServer.clear', port: this.project.config.port });
+    });
+  }
+}
+
+class MockService implements IMockService {
+  projectList: Array<tMockProject> = [];
+
+  serverList: Array<IMockServer> = [];
+
+  constructor() {
+    this.addProject = this.addProject.bind(this);
+    this.removeProject = this.removeProject.bind(this);
+    this.writeProject = this.writeProject.bind(this);
+  }
+
+  getProjectList() {
+    return this.projectList;
+  }
+
+  init() {
+    const projectsFilePath = globSync(`${getProjectPath()}/*.json`);
+    projectsFilePath.forEach(path => {
+      const configFilePath = resolve(path); // 绝对路径
+      const data = JSON.parse(fs.readFileSync(configFilePath, { encoding: 'utf-8' }));
+      this.add(data);
+    });
+  }
+
+  add(project: tMockProject) {
+    this.projectList.push(project);
+    const server = new MockServer(project);
+    this.serverList.push(server);
+  }
+
+  addProject(project: tMockProject) {
+    try {
+      if (!project?.config?.id) {
+        return { data: this.projectList, code: 0 };
+      }
+      this.add(project);
+      fs.writeFileSync(`${getProjectPath()}/${project.config.id}.json`, JSON.stringify(project));
+      return { data: this.projectList, code: 200 };
+    } catch (err: any) {
+      lError('添加mock项目失败', { err, at: 'MockService.addProject' });
+      return { data: this.projectList, code: 0 };
+    }
+  }
+
+  removeProject(id: number) {
+    try {
+      this.projectList = this.projectList.filter(p => p.config.id !== id);
+      this.serverList.find(p => p.project.config.id === id)?.clear();
+      this.serverList = this.serverList.filter(p => p.project.config.id !== id);
+      fs.unlinkSync(`${getProjectPath()}/${id}.json`);
+      return { data: this.projectList, code: 200 };
+    } catch (err: any) {
+      lError('删除mock项目失败', { err, at: 'MockService.removeProject' });
+      return { data: this.projectList, code: 0 };
+    }
+  }
+
+  writeProject(project: tMockProject) {
+    try {
+      this.removeProject(project.config.id);
+      this.addProject(project);
+      return { data: this.projectList, code: 200 };
+    } catch (err: any) {
+      lError('修改mock项目失败', { err, at: 'MockService.writeProject' });
+      return { data: this.projectList, code: 0 };
+    }
+  }
+
+  clear() {
+    this.projectList = [];
+    this.serverList.forEach(server => {
+      server?.clear();
+    });
+    this.serverList = [];
+  }
+
+  reload() {
+    this.clear();
+    this.init();
+  }
+}
+
+const mockService = new MockService();
+mockService.init();
+
+const mockServiceMethod = {
+  add: mockService.addProject,
+  remove: mockService.removeProject,
+  write: mockService.writeProject
+};
+
+export { mockService, mockServiceMethod };
