@@ -8,7 +8,7 @@ import { globSync } from 'glob'; // glob 支持文件遍历查寻
 import Mock from 'mockjs';
 import type { IMockServer, tMockProject, Method, IMockService } from '~/electron/utils/mock/types';
 import { lError, Info } from '../logger';
-import { getProjectPath } from '../appDir';
+import { getProjectPath, mkFilePathMain } from '../appDir';
 
 class MockServer implements IMockServer {
   methodMap: Record<Method, Method> = {
@@ -112,7 +112,8 @@ class MockService implements IMockService {
         return { data: this.projectList, code: 0 };
       }
       this.add(project);
-      fs.writeFileSync(`${getProjectPath()}/${project.config.id}.json`, JSON.stringify(project));
+      const projectPath = mkFilePathMain(getProjectPath());
+      fs.writeFileSync(`${projectPath}/${project.config.id}.json`, JSON.stringify(project));
       return { data: this.projectList, code: 200 };
     } catch (err: any) {
       lError('添加mock项目失败', { err, at: 'MockService.addProject' });
