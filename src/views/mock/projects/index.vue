@@ -62,10 +62,14 @@
 import { onMounted, reactive, ref } from 'vue';
 import { NSpace, NButton, NPopconfirm, NTime } from 'naive-ui';
 import type { DataTableColumn, FormInst } from 'naive-ui';
+import { routeName } from '@/router';
 import { useProjectStore } from '@/store';
+import { useRouterPush } from '@/composables';
 import { useLoadingEmpty } from '@/hooks';
 import { ipcRenderer } from '@/service/api/electronAPI';
 import type { tMockProject } from '~/electron/utils/mock/types';
+
+const { routerPush } = useRouterPush();
 const project = useProjectStore();
 
 const { loading, startLoading, endLoading, empty, setEmpty } = useLoadingEmpty();
@@ -117,8 +121,10 @@ const addProject = async () => {
       config: { ...formValue, createdAt: id, id, lastUpdateAt: id },
       mockList: [
         {
+          name: 'test',
           enable: true,
           url: '/test',
+          id,
           method: 'get',
           data: {
             code: 200,
@@ -166,6 +172,10 @@ const handleValidateClick = async (e: any) => {
   } catch (err: any) {
     window.$message?.error(JSON.stringify(err));
   }
+};
+
+const viewProject = (row: tMockProject) => {
+  routerPush({ name: routeName('mock_project-detail'), query: { id: row.config.id } });
 };
 
 const columns: DataTableColumn<tMockProject>[] = [
@@ -258,6 +268,9 @@ const columns: DataTableColumn<tMockProject>[] = [
               )
             }}
           </NPopconfirm>
+          <NButton type="info" size={'small'} onClick={() => viewProject(row)}>
+            查看
+          </NButton>
         </NSpace>
       );
     }

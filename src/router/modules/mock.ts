@@ -12,6 +12,17 @@ const functionRoute: AuthRoute.Route = {
         requiresAuth: true,
         icon: 'nonicons:interface-16'
       }
+    },
+    {
+      name: 'mock_project-detail',
+      path: '/mock/project-detail',
+      component: 'self',
+      meta: {
+        title: '项目详情',
+        requiresAuth: true,
+        hide: true,
+        icon: 'nonicons:interface-16'
+      }
     }
   ],
   meta: {

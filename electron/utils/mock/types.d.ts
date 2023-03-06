@@ -3,6 +3,8 @@ export type Method = 'get' | 'delete' | 'head' | 'options' | 'post' | 'put' | 'p
 // eslint-disable-next-line no-warning-comments
 // TODO 修复响应数据类型
 export type tMockItem = {
+  name: string;
+  id: number;
   enable: boolean;
   url: string;
   method: Method;
