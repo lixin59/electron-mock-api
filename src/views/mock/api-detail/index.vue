@@ -10,24 +10,21 @@
     >
       <n-tab-pane name="signin" tab="编辑">
         <n-form>
-          <n-form-item-row label="用户名">
+          <n-form-item-row label="接口名称">
             <n-input />
           </n-form-item-row>
-          <n-form-item-row label="密码">
+          <n-form-item-row label="url">
             <n-input />
           </n-form-item-row>
         </n-form>
-        <n-button type="primary" block secondary strong> 登录 </n-button>
+        <n-button type="primary" block secondary strong> 接口名称 </n-button>
       </n-tab-pane>
-      <n-tab-pane name="signup" tab="编辑">
+      <n-tab-pane name="signup" tab="预览">
         <n-form>
-          <n-form-item-row label="用户名">
+          <n-form-item-row label="接口名称">
             <n-input />
           </n-form-item-row>
-          <n-form-item-row label="密码">
-            <n-input />
-          </n-form-item-row>
-          <n-form-item-row label="重复密码">
+          <n-form-item-row label="url">
             <n-input />
           </n-form-item-row>
         </n-form>
@@ -38,6 +35,33 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue';
+import type { tMockItem, tMockProject } from '~/electron/utils/mock/types';
+
+interface Props {
+  id: number;
+  project: tMockProject | null;
+}
+const props = defineProps<Props>();
+
+const mockData = ref<tMockItem>();
+
+const fetchData = () => {
+  const { id, project } = props;
+  const data = project?.mockList.find((m: tMockItem) => m.id === id);
+  if (data) {
+    mockData.value = data;
+  }
+};
+watch(
+  () => props.project,
+  () => {
+    fetchData();
+  }
+);
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <style scoped></style>

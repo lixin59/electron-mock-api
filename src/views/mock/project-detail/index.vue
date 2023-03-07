@@ -32,7 +32,7 @@
                 :mock-list="project?.mockList || []"
                 :base-url="project?.config?.baseUrl || ''"
               />
-              <ApiDetail v-else />
+              <ApiDetail v-else :id="mockId" :project="project" />
             </n-layout>
           </n-layout>
         </n-layout>
@@ -56,8 +56,8 @@ const { routerPush } = useRouterPush();
 const route = useRoute();
 const id = Number(route.query?.id);
 const menuValue = ref('api-list');
-// eslint-disable-next-line @typescript-eslint/ban-types
 const project = ref<tMockProject | null>(null);
+const mockId = ref(0);
 
 const { iconRender } = useIconRender();
 
@@ -65,6 +65,7 @@ const options = computed<any[]>(() => {
   const baseItem = {
     label: '全部接口',
     key: 'api-list',
+    id: 0,
     icon: iconRender({ icon: 'vscode-icons:default-folder-opened' })
   };
   const list =
@@ -87,8 +88,11 @@ const fetchData = async () => {
 const handleToProjects = () => {
   routerPush({ name: routeName('mock_projects') });
 };
-const handleUpdateValue = (key: string) => {
+const handleUpdateValue = (key: string, item: any) => {
   menuValue.value = key;
+  if (item.id) {
+    mockId.value = item.id;
+  }
 };
 const handleAddMock = async () => {
   try {
@@ -101,7 +105,7 @@ const handleAddMock = async () => {
       createdAt: new Date().getTime(),
       data: {
         code: 200,
-        msg: 'holle',
+        msg: 'test',
         data: {
           'list|1-10': [
             {
