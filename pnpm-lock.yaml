@@ -3718,7 +3718,7 @@ packages:
       '@vueuse/shared': 9.13.0_vue@3.2.47
       vue-demi: 0.13.11_vue@3.2.47
     transitivePeerDependencies:
-      - '@vue/composition-api'
+      - '@vue/composition-api-detail'
       - vue
     dev: true
 
@@ -3731,7 +3731,7 @@ packages:
     dependencies:
       vue-demi: 0.13.11_vue@3.2.47
     transitivePeerDependencies:
-      - '@vue/composition-api'
+      - '@vue/composition-api-detail'
       - vue
     dev: true
 

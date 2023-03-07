@@ -16,6 +16,8 @@ export const views: Record<
   management_role: () => import('./management/role/index.vue'),
   management_route: () => import('./management/route/index.vue'),
   management_user: () => import('./management/user/index.vue'),
+  'mock_api-detail': () => import('./mock/api-detail/index.vue'),
+  'mock_api-list': () => import('./mock/api-list/index.vue'),
   'mock_project-detail': () => import('./mock/project-detail/index.vue'),
   mock_projects: () => import('./mock/projects/index.vue'),
   plugin_charts_antv: () => import('./plugin/charts/antv/index.vue'),
