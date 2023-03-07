@@ -119,28 +119,7 @@ const addProject = async () => {
     const id = new Date().getTime();
     const res = await project.addProject({
       config: { ...formValue, createdAt: id, id, lastUpdateAt: id },
-      mockList: [
-        {
-          name: 'test',
-          enable: true,
-          url: '/test',
-          id,
-          method: 'get',
-          data: {
-            code: 200,
-            msg: 'holle',
-            data: {
-              'list|1-10': [
-                {
-                  'id|+1': 1
-                }
-              ]
-            }
-          },
-          timeout: 1000,
-          responseType: 'json'
-        }
-      ]
+      mockList: []
     });
     if (res.code === 200) {
       window.$message?.success(`添加项目成功`);

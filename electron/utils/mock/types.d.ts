@@ -10,6 +10,7 @@ export type tMockItem = {
   method: Method;
   data: any;
   timeout: number;
+  createdAt: number;
   responseType: any;
 };
 
@@ -42,6 +43,7 @@ export interface IMockService {
   getProjectList: () => Array<tMockProject>;
   init: () => void;
   add: (obj: tMockProject) => void;
+  update: (projectList: Array<tMockProject>) => tRes;
   addProject: (obj: tMockProject) => tRes;
   writeProject: (obj: tMockProject) => tRes;
   removeProject: (id: number) => tRes;

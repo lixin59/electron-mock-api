@@ -85,6 +85,7 @@ class MockService implements IMockService {
     this.addProject = this.addProject.bind(this);
     this.removeProject = this.removeProject.bind(this);
     this.writeProject = this.writeProject.bind(this);
+    this.update = this.update.bind(this);
   }
 
   getProjectList() {
@@ -145,6 +146,20 @@ class MockService implements IMockService {
     }
   }
 
+  update(projectList: Array<tMockProject>) {
+    try {
+      this.clear();
+      projectList.forEach(p => {
+        this.addProject(p);
+      });
+      this.reload();
+      return { data: this.projectList, code: 200 };
+    } catch (err: any) {
+      return { data: this.projectList, code: 0 };
+      lError('更新mock项目失败', { err, at: 'MockService.writeProject' });
+    }
+  }
+
   clear() {
     this.projectList = [];
     this.serverList.forEach(server => {
@@ -165,7 +180,8 @@ mockService.init();
 const mockServiceMethod = {
   add: mockService.addProject,
   remove: mockService.removeProject,
-  write: mockService.writeProject
+  write: mockService.writeProject,
+  update: mockService.update
 };
 
 export { mockService, mockServiceMethod };

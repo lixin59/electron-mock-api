@@ -2,7 +2,8 @@
   <n-space :vertical="true" :size="16">
     <n-card :title="project?.config?.projectName" :bordered="false" size="small" class="shadow-sm rounded-16px">
       <template #header-extra>
-        <n-button>添加接口</n-button>
+        <n-button @click="handleAddMock">添加接口</n-button>
+        <n-button @click="handleToProjects">返回</n-button>
       </template>
       <n-space vertical>
         <n-layout>
@@ -27,6 +28,7 @@
             <n-layout style="min-height: 500px">
               <ApiList
                 v-if="menuValue === 'api-list'"
+                :id="project?.config?.id || 0"
                 :mock-list="project?.mockList || []"
                 :base-url="project?.config?.baseUrl || ''"
               />
@@ -35,15 +37,12 @@
           </n-layout>
         </n-layout>
       </n-space>
-      <n-space :vertical="true" :size="12">
-        <n-button @click="handleToProjects">返回</n-button>
-      </n-space>
     </n-card>
   </n-space>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { routeName } from '@/router';
 import { useProjectStore } from '@/store';
@@ -52,34 +51,13 @@ import ApiList from '@/views/mock/api-list/index.vue';
 import ApiDetail from '@/views/mock/api-detail/index.vue';
 import type { tMockProject } from '~/electron/utils/mock/types';
 
-const { projectList } = useProjectStore();
+const { projectList, addMock } = useProjectStore();
 const { routerPush } = useRouterPush();
 const route = useRoute();
 const id = Number(route.query?.id);
-// const baseMockData: tMockItem = {
-//   name: '',
-//   enable: true,
-//   url: '',
-//   id: 0,
-//   method: 'get',
-//   data: {
-//     code: 200,
-//     msg: 'holle',
-//     data: {
-//       'list|1-10': [
-//         {
-//           'id|+1': 1
-//         }
-//       ]
-//     }
-//   },
-//   timeout: 1000,
-//   responseType: 'json'
-// };
-// const mockData = ref<tMockItem>(baseMockData);
 const menuValue = ref('api-list');
 // eslint-disable-next-line @typescript-eslint/ban-types
-const project = ref<tMockProject | null>(projectList.find((p: tMockProject) => p.config.id === id) || null);
+const project = ref<tMockProject | null>(null);
 
 const { iconRender } = useIconRender();
 
@@ -99,12 +77,56 @@ const options = computed<any[]>(() => {
   return [baseItem, ...list];
 });
 
+const fetchData = async () => {
+  const data = projectList.find((p: tMockProject) => p.config.id === id);
+  if (data) {
+    project.value = data;
+  }
+};
+
 const handleToProjects = () => {
   routerPush({ name: routeName('mock_projects') });
 };
 const handleUpdateValue = (key: string) => {
   menuValue.value = key;
 };
+const handleAddMock = async () => {
+  try {
+    const res = await addMock(project?.value?.config.id || 0, {
+      name: `接口${(project?.value?.mockList?.length || 0) + 1}`,
+      enable: true,
+      url: '',
+      id: new Date().getTime(),
+      method: 'get',
+      createdAt: new Date().getTime(),
+      data: {
+        code: 200,
+        msg: 'holle',
+        data: {
+          'list|1-10': [
+            {
+              'id|+1': 1
+            }
+          ]
+        }
+      },
+      timeout: 1000,
+      responseType: 'json'
+    });
+    if (res.code === 200) {
+      window.$message?.success(`接口添加成功 `);
+    } else {
+      window.$message?.error(`接口添加失败 `);
+    }
+  } catch (e: any) {
+    window.$message?.error(`接口添加失败:${JSON.stringify(e)} `);
+  } finally {
+    fetchData();
+  }
+};
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <style scoped></style>
