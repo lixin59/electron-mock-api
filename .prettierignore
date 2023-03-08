@@ -1,0 +1,4 @@
+# Ignore all HTML files:
+*.html
+electron-builder.json5
+
