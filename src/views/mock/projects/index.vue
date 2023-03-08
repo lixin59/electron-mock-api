@@ -16,11 +16,6 @@
               message: '请输入项目名称',
               trigger: ['input', 'blur']
             },
-            port: {
-              required: true,
-              message: '请验证端口号',
-              trigger: ['input']
-            },
             baseUrl: {
               required: true,
               message: '请输入基础URL',
@@ -29,13 +24,13 @@
           }"
           size="medium"
         >
-          <n-form-item label="项目名称" path="user.name">
+          <n-form-item label="项目名称" path="projectName">
             <n-input v-model:value="formValue.projectName" placeholder="输入项目名称" />
           </n-form-item>
-          <n-form-item label="端口号" path="user.age">
+          <n-form-item label="端口号" path="port">
             <n-input-number v-model:value="formValue.port" clearable />
           </n-form-item>
-          <n-form-item label="基础URL" path="phone">
+          <n-form-item label="基础URL" path="baseUrl">
             <n-input v-model:value="formValue.baseUrl" placeholder="/api" />
           </n-form-item>
           <n-form-item>
@@ -59,7 +54,7 @@
 </template>
 
 <script setup lang="tsx">
-import { onMounted, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { NSpace, NButton, NPopconfirm, NTime } from 'naive-ui';
 import type { DataTableColumn, FormInst } from 'naive-ui';
 import { routeName } from '@/router';
@@ -133,8 +128,6 @@ const addProject = async () => {
 const handleValidateClick = async (e: any) => {
   e.preventDefault();
   try {
-    // eslint-disable-next-line no-warning-comments
-    // fixme 表单验证失效？
     formRef.value?.validate(async errors => {
       if (!errors) {
         const data = await ipcRenderer.invoke('ipc-checkPortUsable', { port: formValue.port });
@@ -256,9 +249,7 @@ const columns: DataTableColumn<tMockProject>[] = [
   }
 ];
 
-onMounted(() => {
-  fetchData();
-});
+fetchData();
 </script>
 
 <style scoped></style>

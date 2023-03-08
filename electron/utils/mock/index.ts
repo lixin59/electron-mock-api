@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import fs from 'fs';
 import type { Server } from 'http';
 import Koa from 'koa';
+import cors from 'koa-cors';
 import Router from 'koa-router';
 import { globSync } from 'glob'; // glob 支持文件遍历查寻
 // import logger from 'koa-logger'; // koa-logger 实现在终端打印node日志，方便调试
@@ -45,7 +46,7 @@ class MockServer implements IMockServer {
           // console.log(ctx.request.query); // { aid: '123', name: 'zhangsan' } 对象
           // console.log(ctx.request.querystring); // aid=123&name=zhangsan
 
-          const resData = Mock.mock(data);
+          const resData = Mock.mock(JSON.parse(data));
           try {
             ctx.body = resData;
           } catch (err: any) {
@@ -59,7 +60,7 @@ class MockServer implements IMockServer {
         });
       }
     });
-    app.use(router.routes()).use(router.allowedMethods());
+    app.use(cors()).use(router.routes()).use(router.allowedMethods());
     const { port } = this.project.config;
     const server = app.listen(port, () => {
       Info(`app started at port ${port}...`);

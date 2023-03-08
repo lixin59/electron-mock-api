@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="tsx">
-import { onMounted, watch } from 'vue';
+import { watch } from 'vue';
 import { NSpace, NTag, NPopconfirm, NButton } from 'naive-ui';
 import type { DataTableColumn } from 'naive-ui';
 import { useProjectStore } from '@/store';
@@ -56,8 +56,6 @@ const deleteRow = async (row: tMockItem) => {
     }
   } catch (e: any) {
     window.$message?.error(`操作失败:${JSON.stringify(e)} `);
-  } finally {
-    fetchData();
   }
 };
 
@@ -136,9 +134,14 @@ watch(
     fetchData();
   }
 );
-onMounted(() => {
-  fetchData();
-});
+watch(
+  () => props.mockList.length,
+  () => {
+    console.log('sssssssssss');
+    fetchData();
+  }
+);
+fetchData();
 </script>
 
 <style scoped></style>

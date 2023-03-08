@@ -11,6 +11,7 @@ export type tMockItem = {
   data: any;
   timeout: number;
   createdAt: number;
+  lastUpdateAt: number;
   responseType: any;
 };
 

@@ -47,5 +47,15 @@ export const useProjectStore = defineStore('mock-project', () => {
     return res;
   };
 
-  return { projectList, getData, addProject, removeProject, writeProject, addMock, removeMock };
+  const editMock = async (pid: number, id: number, mock: tMockItem) => {
+    try {
+      await removeMock(pid, id);
+      await addMock(pid, mock);
+      return { code: 200 };
+    } catch (e: any) {
+      return { code: 0, msg: e };
+    }
+  };
+
+  return { projectList, getData, addProject, removeProject, writeProject, addMock, removeMock, editMock };
 });

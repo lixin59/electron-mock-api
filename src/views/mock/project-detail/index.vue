@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { routeName } from '@/router';
 import { useProjectStore } from '@/store';
@@ -99,11 +99,12 @@ const handleAddMock = async () => {
     const res = await addMock(project?.value?.config.id || 0, {
       name: `接口${(project?.value?.mockList?.length || 0) + 1}`,
       enable: true,
-      url: '',
+      url: '/test',
       id: new Date().getTime(),
       method: 'get',
       createdAt: new Date().getTime(),
-      data: {
+      lastUpdateAt: new Date().getTime(),
+      data: JSON.stringify({
         code: 200,
         msg: 'test',
         data: {
@@ -113,7 +114,7 @@ const handleAddMock = async () => {
             }
           ]
         }
-      },
+      }),
       timeout: 1000,
       responseType: 'json'
     });
@@ -128,9 +129,7 @@ const handleAddMock = async () => {
     fetchData();
   }
 };
-onMounted(() => {
-  fetchData();
-});
+fetchData();
 </script>
 
 <style scoped></style>
