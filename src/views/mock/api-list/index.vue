@@ -137,7 +137,6 @@ watch(
 watch(
   () => props.mockList.length,
   () => {
-    console.log('sssssssssss');
     fetchData();
   }
 );
