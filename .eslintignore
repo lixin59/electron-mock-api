@@ -5,3 +5,4 @@ router-page.d.ts
 dist-electron/
 dist/
 *.md
+.github/
