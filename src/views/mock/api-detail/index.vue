@@ -197,7 +197,7 @@ const fetchData = () => {
   }
 };
 watch(
-  () => props.project,
+  () => props.id,
   () => {
     fetchData();
   }
