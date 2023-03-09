@@ -1,6 +1,6 @@
 {
   "name": "mock-admin",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.1",
   "description": "一个基于Vue3、Vite3、TypeScript、NaiveUI and UnoCSS的清新优雅的mock管理系统。",
   "author": {
     "name": "linxin59",
@@ -51,7 +51,7 @@
     "tsx": "tsx",
     "logo": "tsx ./scripts/logo.ts",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "release": "bumpp --preid rc --commit \"(release): v%s\" --no-push --tag",
+    "release": "bumpp --preid rc --commit \"chore(release): v%s\" --no-push --tag --no-verify",
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
