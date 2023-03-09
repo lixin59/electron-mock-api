@@ -1,6 +1,6 @@
 import { release } from 'node:os';
 import { join } from 'node:path';
-import { app, BrowserWindow, shell, ipcMain, screen } from 'electron';
+import { app, BrowserWindow, Menu, shell, ipcMain, screen } from 'electron';
 import { checkConfigFile } from '../config';
 import { CreateDailyLogger, Info } from '../utils/logger';
 import initIpcMain from '../ipcMain';
@@ -44,6 +44,11 @@ const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, 'index.html');
 
 async function createWindow() {
+  // 仅dev环境才有工具栏
+  if (process.env.NODE_ENV !== 'development') {
+    Menu.setApplicationMenu(null);
+  }
+
   const size = screen.getPrimaryDisplay().workAreaSize;
   win = new BrowserWindow({
     title: 'Main window',
