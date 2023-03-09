@@ -51,7 +51,7 @@
     "tsx": "tsx",
     "logo": "tsx ./scripts/logo.ts",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "release": "bumpp --preid rc --commit \"release: v%s\" --no-push --tag",
+    "release": "bumpp --preid rc --commit \"(release): v%s\" --no-push --tag",
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
