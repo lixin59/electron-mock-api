@@ -49,9 +49,19 @@ export const useProjectStore = defineStore('mock-project', () => {
 
   const editMock = async (pid: number, id: number, mock: tMockItem) => {
     try {
-      await removeMock(pid, id);
-      await addMock(pid, mock);
-      return { code: 200 };
+      const project = projectList.value?.find(p => p?.config?.id === pid);
+      if (!project) {
+        return { code: 0, data: [], msg: '没有找到该项目' };
+      }
+      const mockList = project.mockList?.map(m => {
+        if (m.id === id) {
+          return mock;
+        }
+        return m;
+      });
+      project.mockList = mockList;
+      const res: { code: number; data: tMockProject[] } = await updateServer();
+      return { ...res, msg: '保存成功' };
     } catch (e: any) {
       return { code: 0, msg: e };
     }

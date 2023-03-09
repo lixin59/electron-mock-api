@@ -69,7 +69,7 @@
         <n-divider title-placement="left"> 请求参数 </n-divider>
         <n-space :vertical="true"> 开发中敬请期待 </n-space>
         <n-divider title-placement="left"> 响应数据 </n-divider>
-        <n-code :code="resData" language="json" />
+        <n-code :code="resData" language="json" word-wrap />
       </n-tab-pane>
     </n-tabs>
   </n-card>
@@ -165,7 +165,7 @@ const saveData = async (e: any) => {
           window.$message?.error(data.msg);
           return;
         }
-        window.$message?.success('验证成功');
+        window.$message?.success('保存成功');
       } else {
         window.$message?.error('Invalid');
       }
@@ -195,6 +195,7 @@ const fetchData = () => {
   if (data) {
     mockData.value = data;
   }
+  resData.value = '';
 };
 watch(
   () => props.id,

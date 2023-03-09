@@ -1,8 +1,8 @@
 <template>
-  <n-card title="接口数据" class="h-full shadow-sm rounded-16px">
+  <n-card title="接口数据" class="h-full shadow-sm">
     <n-space :vertical="true">
-      <loading-empty-wrapper class="h-480px" :loading="loading" :empty="empty">
-        <n-data-table :columns="columns" :data="mockList" :flex-height="true" class="h-480px" />
+      <loading-empty-wrapper class="h-500px" :loading="loading" :empty="empty">
+        <n-data-table :columns="columns" :data="mockList" :flex-height="true" class="h-500px" />
       </loading-empty-wrapper>
     </n-space>
   </n-card>
@@ -10,7 +10,7 @@
 
 <script setup lang="tsx">
 import { watch } from 'vue';
-import { NSpace, NTag, NPopconfirm, NButton } from 'naive-ui';
+import { NSpace, NTag, NPopconfirm, NButton, NTime } from 'naive-ui';
 import type { DataTableColumn } from 'naive-ui';
 import { useProjectStore } from '@/store';
 import { useLoadingEmpty } from '@/hooks';
@@ -71,6 +71,7 @@ const columns: DataTableColumn<tMockItem>[] = [
   {
     title: '接口路径',
     key: 'method',
+    minWidth: 400,
     align: 'center',
     render: row => {
       return (
@@ -82,7 +83,32 @@ const columns: DataTableColumn<tMockItem>[] = [
     }
   },
   {
+    title: '创建时间',
+    key: 'createdAt',
+    align: 'center',
+    render: row => {
+      return (
+        <NSpace justify={'center'}>
+          <NTime time={row.createdAt} />
+        </NSpace>
+      );
+    }
+  },
+  {
+    title: '最后更新时间',
+    key: 'lastUpdateAt',
+    align: 'center',
+    render: row => {
+      return (
+        <NSpace justify={'center'}>
+          <NTime time={row.lastUpdateAt} />
+        </NSpace>
+      );
+    }
+  },
+  {
     title: '状态',
+    width: 100,
     key: 'enable',
     align: 'center',
     render: row => {
@@ -96,14 +122,16 @@ const columns: DataTableColumn<tMockItem>[] = [
   {
     title: '延时',
     key: 'timeout',
+    width: 100,
     align: 'center',
     render: row => {
-      return row.timeout;
+      return `${row.timeout}ms`;
     }
   },
   {
     key: 'action',
-    title: 'Action',
+    title: '操作',
+    width: 80,
     align: 'center',
     render: row => {
       return (

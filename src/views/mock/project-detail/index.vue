@@ -32,7 +32,9 @@
                 :mock-list="project?.mockList || []"
                 :base-url="project?.config?.baseUrl || ''"
               />
-              <ApiDetail v-else :id="mockId" :project="project" />
+              <template v-for="item in project?.mockList">
+                <ApiDetail v-if="item.id === mockId" :id="mockId" :key="item.id" :project="project" />
+              </template>
             </n-layout>
           </n-layout>
         </n-layout>
@@ -90,9 +92,7 @@ const handleToProjects = () => {
 };
 const handleUpdateValue = (key: string, item: any) => {
   menuValue.value = key;
-  if (item.id) {
-    mockId.value = item.id;
-  }
+  mockId.value = item.id;
 };
 const handleAddMock = async () => {
   try {
