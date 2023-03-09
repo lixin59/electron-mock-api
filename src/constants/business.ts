@@ -23,3 +23,16 @@ export const userStatusOptions: { value: UserManagement.UserStatusKey; label: st
   { value: '3', label: userStatusLabels['3'] },
   { value: '4', label: userStatusLabels['4'] }
 ];
+
+/** 请求方法标签状态map */
+export const methodTagMap: Record<string, 'default' | 'error' | 'primary' | 'info' | 'success' | 'warning'> = {
+  get: 'success',
+  post: 'info',
+  delete: 'error',
+  put: 'warning',
+  head: 'primary',
+  link: 'primary',
+  options: 'primary',
+  patch: 'primary',
+  unlink: 'default'
+};

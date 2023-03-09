@@ -11,6 +11,14 @@ import type { IMockServer, tMockProject, Method, IMockService } from '~/electron
 import { lError, Info } from '../logger';
 import { getProjectPath, mkFilePathMain } from '../appDir';
 
+async function delay(timeout: number) {
+  return new Promise(res => {
+    setTimeout(() => {
+      res('');
+    }, timeout);
+  });
+}
+
 class MockServer implements IMockServer {
   methodMap: Record<Method, Method> = {
     get: 'get',
@@ -33,9 +41,9 @@ class MockServer implements IMockServer {
     const app = new Koa();
     const router = new Router({ prefix: `${project.config.baseUrl}` });
     // app.use(logger());
-    this.project.mockList.forEach(({ enable, method, data, url }) => {
+    this.project.mockList.forEach(({ enable, method, data, url, timeout }) => {
       if (enable && this.methodMap[method]) {
-        router[method](url, (ctx: any) => {
+        router[method](url, async (ctx: any) => {
           // 从ctx中读取get传值
           // console.log("ctx.query: ", ctx.query); // { aid: '123' } 获取的是对象 用的最多的方式  **推荐**
           // console.log("ctx.querystring: ", ctx.querystring); // aid=123&name=zhangsan  获取的是一个字符串
@@ -48,6 +56,7 @@ class MockServer implements IMockServer {
 
           const resData = Mock.mock(JSON.parse(data));
           try {
+            await delay(timeout); // 模拟延时
             ctx.body = resData;
           } catch (err: any) {
             lError(`服务器错误${project.config.port}`, err);

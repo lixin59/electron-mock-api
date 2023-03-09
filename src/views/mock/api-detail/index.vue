@@ -81,8 +81,8 @@ import type { FormInst } from 'naive-ui';
 import axios from 'axios';
 import { useProjectStore } from '@/store';
 import MonacoEditor from '@/components/custom/MonacoEditor.vue';
+import { methodTagMap } from '@/constants';
 import type { tMockItem, tMockProject } from '~/electron/utils/mock/types';
-
 const options = [
   {
     label: 'get',
@@ -121,17 +121,6 @@ const options = [
     value: 'unlink'
   }
 ];
-const methodTagMap: Record<string, 'default' | 'error' | 'primary' | 'info' | 'success' | 'warning'> = {
-  get: 'success',
-  post: 'info',
-  delete: 'error',
-  put: 'warning',
-  head: 'primary',
-  link: 'primary',
-  options: 'primary',
-  patch: 'primary',
-  unlink: 'default'
-};
 interface Props {
   id: number;
   project: tMockProject | null;

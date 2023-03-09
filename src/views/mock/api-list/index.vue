@@ -14,7 +14,9 @@ import { NSpace, NTag, NPopconfirm, NButton, NTime } from 'naive-ui';
 import type { DataTableColumn } from 'naive-ui';
 import { useProjectStore } from '@/store';
 import { useLoadingEmpty } from '@/hooks';
+import { methodTagMap } from '@/constants';
 import type { tMockItem } from '~/electron/utils/mock/types';
+
 const { loading, startLoading, endLoading, empty, setEmpty } = useLoadingEmpty();
 interface Props {
   id: number;
@@ -23,18 +25,6 @@ interface Props {
 }
 const props = defineProps<Props>();
 const project = useProjectStore();
-
-const methodTagMap: Record<string, 'default' | 'error' | 'primary' | 'info' | 'success' | 'warning'> = {
-  get: 'success',
-  post: 'info',
-  delete: 'error',
-  put: 'warning',
-  head: 'primary',
-  link: 'primary',
-  options: 'primary',
-  patch: 'primary',
-  unlink: 'default'
-};
 
 const fetchData = async () => {
   startLoading();
