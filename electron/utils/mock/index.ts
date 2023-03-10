@@ -10,6 +10,7 @@ import Mock from 'mockjs';
 import type { IMockServer, tMockProject, Method, IMockService } from '~/electron/utils/mock/types';
 import { lError, Info } from '../logger';
 import { getProjectPath, mkFilePathMain } from '../appDir';
+import validate from './validate';
 
 async function delay(timeout: number) {
   return new Promise(res => {
@@ -41,7 +42,7 @@ class MockServer implements IMockServer {
     const app = new Koa();
     const router = new Router({ prefix: `${project.config.baseUrl}` });
     // app.use(logger());
-    this.project.mockList.forEach(({ enable, method, data, url, timeout }) => {
+    this.project.mockList.forEach(({ enable, method, data, url, rules, timeout }) => {
       if (enable && this.methodMap[method]) {
         router[method](url, async (ctx: any) => {
           // 从ctx中读取get传值
@@ -53,13 +54,23 @@ class MockServer implements IMockServer {
           // console.log(ctx.request.url);
           // console.log(ctx.request.query); // { aid: '123', name: 'zhangsan' } 对象
           // console.log(ctx.request.querystring); // aid=123&name=zhangsan
-
-          const resData = Mock.mock(JSON.parse(data));
           try {
+            const { error } = await validate(ctx, rules);
+            const resData = Mock.mock(JSON.parse(data));
             await delay(timeout); // 模拟延时
+            if (error) {
+              // eslint-disable-next-line require-atomic-updates
+              ctx.body = {
+                code: -1,
+                error
+              };
+              return;
+            }
+            // eslint-disable-next-line require-atomic-updates
             ctx.body = resData;
           } catch (err: any) {
             lError(`服务器错误${project.config.port}`, err);
+            // eslint-disable-next-line require-atomic-updates
             ctx.body = {
               status: 404,
               type: 'false'

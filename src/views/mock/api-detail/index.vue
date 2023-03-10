@@ -29,13 +29,21 @@
             <n-button attr-type="button" type="info" dashed @click="saveData"> 保存 </n-button>
           </n-form-item>
         </n-form>
-        <n-divider title-placement="left"> 请求参数 </n-divider>
-        <n-space :vertical="true"> 开发中敬请期待 </n-space>
+        <n-divider title-placement="left"> 请求参数验证规则 </n-divider>
+        <n-space :vertical="true">
+          <n-data-table :columns="ruleColumns" :data="mockData?.rules" />
+        </n-space>
         <n-divider title-placement="left"> 响应数据 </n-divider>
         <MonacoEditor
           v-model:value="mockData.data"
-          style="min-width: 300px; min-height: 400px"
-          :options="{ language: 'json' }"
+          style="min-width: 300px; min-height: 200px"
+          :options="{
+            language: 'json',
+            theme: 'vs',
+            minimap: {
+              enabled: false // 是否启用预览图
+            }
+          }"
         />
       </n-tab-pane>
       <n-tab-pane name="preview" tab="预览">
@@ -67,7 +75,13 @@
           </n-form-item>
         </n-form>
         <n-divider title-placement="left"> 请求参数 </n-divider>
-        <n-space :vertical="true"> 开发中敬请期待 </n-space>
+        <n-space :vertical="true">
+          <n-space>
+            <n-radio :checked="reqType === 'params'" value="params" name="Query" @change="changeReqType">Query</n-radio>
+            <n-radio :checked="reqType === 'data'" value="data" name="body" @change="changeReqType">Body</n-radio>
+          </n-space>
+          <n-dynamic-input v-model:value="reqData" preset="pair" key-placeholder="参数名" value-placeholder="参数值" />
+        </n-space>
         <n-divider title-placement="left"> 响应数据 </n-divider>
         <n-code :code="resData" language="json" word-wrap />
       </n-tab-pane>
@@ -75,14 +89,16 @@
   </n-card>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref, watch } from 'vue';
-import type { FormInst } from 'naive-ui';
+import type { FormInst, DataTableColumn } from 'naive-ui';
+import { NInput, NSwitch, NSelect, NSpace, NButton, NIcon } from 'naive-ui';
 import axios from 'axios';
 import { useProjectStore } from '@/store';
+import { useIconRender } from '@/composables';
 import MonacoEditor from '@/components/custom/MonacoEditor.vue';
 import { methodTagMap } from '@/constants';
-import type { tMockItem, tMockProject } from '~/electron/utils/mock/types';
+import type { tMockItem, tMockProject, ruleColumn } from '~/electron/utils/mock/types';
 const options = [
   {
     label: 'get',
@@ -125,6 +141,17 @@ interface Props {
   id: number;
   project: tMockProject | null;
 }
+
+const { iconRender } = useIconRender();
+
+const baseRule: ruleColumn = {
+  name: '',
+  key: 0,
+  type: 'string',
+  required: false,
+  message: ''
+};
+
 const props = defineProps<Props>();
 const projectStore = useProjectStore();
 const mockData = ref<tMockItem>({
@@ -135,12 +162,16 @@ const mockData = ref<tMockItem>({
   method: 'get',
   data: '',
   timeout: 0,
+  rules: [{ ...baseRule }],
   createdAt: 0,
   lastUpdateAt: 0,
   responseType: 'json'
 });
 const formRef = ref<FormInst | null>(null);
 const resData = ref('');
+const reqData = ref<{ key: string; value: string }[]>([]);
+
+// 保存修改后的数据
 const saveData = async (e: any) => {
   e.preventDefault();
   try {
@@ -163,11 +194,34 @@ const saveData = async (e: any) => {
     window.$message?.error(JSON.stringify(err));
   }
 };
+
+const reqType = ref('params');
+// 选择请求参数使用 params 还是 data 发送
+const changeReqType = (e: any) => {
+  reqType.value = (e.target as HTMLInputElement).value;
+};
+// 转换请求数据
+const parseReqData = (type: string) => {
+  const data: Record<string, string> = {};
+  reqData.value.forEach(obj => {
+    data[obj.key] = obj.value;
+  });
+  if (reqData.value.length < 1) {
+    return undefined;
+  }
+  if (type === reqType.value) {
+    return data;
+  }
+  return undefined;
+};
+// 测试请求
 const mockTest = async () => {
   try {
     const res = await axios({
       baseURL: `http://127.0.0.1:${props?.project?.config?.port}${props?.project?.config.baseUrl}${mockData.value.url}`,
-      method: mockData.value.method
+      method: mockData.value.method,
+      params: parseReqData('params'),
+      data: parseReqData('data')
     });
     if (res.data) {
       resData.value = JSON.stringify(res.data);
@@ -177,6 +231,105 @@ const mockTest = async () => {
     window.$message?.error(JSON.stringify(err));
   }
 };
+
+// 删除其中一行请求参数规则
+const removeRule = (index: number) => {
+  mockData.value.rules = mockData.value.rules.filter((_rule, idx) => index !== idx);
+};
+
+// 添加一行请求参数规则
+const addRule = () => {
+  mockData.value.rules.push({ ...baseRule, key: new Date().getTime() });
+};
+const ruleColumns: DataTableColumn<ruleColumn>[] = [
+  {
+    title: '参数名',
+    key: 'name',
+    render: (row, index) => {
+      return (
+        <NInput
+          value={row.name}
+          onUpdateValue={v => {
+            mockData.value.rules[index].name = v;
+          }}
+        />
+      );
+    }
+  },
+  {
+    title: '参数类型',
+    key: 'age',
+    render: (row, index) => {
+      return (
+        <NSelect
+          options={[
+            { label: 'string', value: 'string' },
+            { label: 'number', value: 'number' },
+            { label: 'boolean', value: 'boolean' },
+            { label: 'date', value: 'date' },
+            { label: 'email', value: 'email' },
+            { label: 'hex', value: 'hex' },
+            { label: 'method', value: 'method' }
+          ]}
+          value={row.type}
+          onUpdateValue={v => {
+            mockData.value.rules[index].type = v;
+          }}
+        />
+      );
+    }
+  },
+  {
+    title: '是否必填',
+    key: 'required',
+    render: (row, index) => {
+      return (
+        <NSwitch
+          value={row.required}
+          onUpdateValue={v => {
+            mockData.value.rules[index].required = v;
+          }}
+        />
+      );
+    }
+  },
+  {
+    title: '错误提示',
+    key: 'message',
+    render: (row, index) => {
+      return (
+        <NInput
+          value={row.message}
+          onUpdateValue={v => {
+            mockData.value.rules[index].message = v;
+          }}
+        />
+      );
+    }
+  },
+  {
+    key: 'action',
+    title: '操作',
+    width: 100,
+    align: 'center',
+    render: (_row, index) => {
+      return (
+        <NSpace justify={'start'}>
+          {mockData.value?.rules?.length > 1 && (
+            <NButton size="tiny" onClick={() => removeRule(index)}>
+              <NIcon>{iconRender({ icon: 'codicon:remove' })}</NIcon>
+            </NButton>
+          )}
+          {index === mockData.value?.rules?.length - 1 && (
+            <NButton size="tiny" onClick={addRule}>
+              <NIcon>{iconRender({ icon: 'codicon:add' })}</NIcon>
+            </NButton>
+          )}
+        </NSpace>
+      );
+    }
+  }
+];
 
 const fetchData = () => {
   const { id, project } = props;
@@ -192,7 +345,6 @@ watch(
     fetchData();
   }
 );
-
 fetchData();
 </script>
 

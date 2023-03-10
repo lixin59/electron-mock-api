@@ -115,6 +115,7 @@ const handleAddMock = async () => {
           ]
         }
       }),
+      rules: [{ name: '', key: 0, type: 'string', required: false, message: '' }],
       timeout: 1000,
       responseType: 'json'
     });
