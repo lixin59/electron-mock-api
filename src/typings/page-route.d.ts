@@ -34,20 +34,7 @@ declare namespace PageRoute {
     | 'mock_api-detail'
     | 'mock_api-list'
     | 'mock_project-detail'
-    | 'mock_projects'
-    | 'plugin'
-    | 'plugin_charts'
-    | 'plugin_charts_antv'
-    | 'plugin_charts_echarts'
-    | 'plugin_copy'
-    | 'plugin_editor'
-    | 'plugin_editor_markdown'
-    | 'plugin_editor_quill'
-    | 'plugin_icon'
-    | 'plugin_map'
-    | 'plugin_print'
-    | 'plugin_swiper'
-    | 'plugin_video';
+    | 'mock_projects';
 
   /**
    * last degree route key, which has the page file
@@ -71,15 +58,5 @@ declare namespace PageRoute {
     | 'mock_api-list'
     | 'mock_project-detail'
     | 'mock_projects'
-    | 'plugin_charts_antv'
-    | 'plugin_charts_echarts'
-    | 'plugin_copy'
-    | 'plugin_editor_markdown'
-    | 'plugin_editor_quill'
-    | 'plugin_icon'
-    | 'plugin_map'
-    | 'plugin_print'
-    | 'plugin_swiper'
-    | 'plugin_video'
   >;
 }

@@ -19,15 +19,5 @@ export const views: Record<
   'mock_api-detail': () => import('./mock/api-detail/index.vue'),
   'mock_api-list': () => import('./mock/api-list/index.vue'),
   'mock_project-detail': () => import('./mock/project-detail/index.vue'),
-  mock_projects: () => import('./mock/projects/index.vue'),
-  plugin_charts_antv: () => import('./plugin/charts/antv/index.vue'),
-  plugin_charts_echarts: () => import('./plugin/charts/echarts/index.vue'),
-  plugin_copy: () => import('./plugin/copy/index.vue'),
-  plugin_editor_markdown: () => import('./plugin/editor/markdown/index.vue'),
-  plugin_editor_quill: () => import('./plugin/editor/quill/index.vue'),
-  plugin_icon: () => import('./plugin/icon/index.vue'),
-  plugin_map: () => import('./plugin/map/index.vue'),
-  plugin_print: () => import('./plugin/print/index.vue'),
-  plugin_swiper: () => import('./plugin/swiper/index.vue'),
-  plugin_video: () => import('./plugin/video/index.vue')
+  mock_projects: () => import('./mock/projects/index.vue')
 };
