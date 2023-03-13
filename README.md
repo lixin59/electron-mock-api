@@ -12,17 +12,18 @@
 
 ## v1版本计划
 1. - [x] 后端服务
-2. - [ ] 项目管理配置界面
+2. - [x] 项目管理配置界面
 3. - [ ] 数据看板
 4. - [ ] 日志界面
 5. - [ ] 用户鉴权
 
 ## 文档
 
-- [项目文档: 待更新](https://github.com/lixin59/electron-mock-api)
+- [使用说明](./docs/readme.md)
 
 ## 项目示例图
-
+![接口列表](./docs/apilist.png)
+![端口占用](./docs/add-project-err.png)
 ## 安装使用
 
 - 环境配置

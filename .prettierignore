@@ -2,3 +2,5 @@
 *.html
 electron-builder.json5
 .github/
+*.md
+*.png
