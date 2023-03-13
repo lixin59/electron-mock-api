@@ -1,10 +1,43 @@
-<div align="center">
-	<h1>electron-vite-vue-admin</h1>
-</div>
+<h1 align="center">项目简介</h1>
 
-## 简介
+<p align="center">
+electron-mock-admin是一个Mock Api 管理系统。
+前端使用vue3、typescript、vite构建, 后端使用koa2实现mockserver。
+现阶段目的是做一个简洁易用的mock接口数据的工具。
+</p>
 
-[electron-mock-admin](https://github.com/lixin59/electron-mock-api) 是一个Mock Api 管理系统
+<p align="center">
+    <a href="https://github.com/lixin59/electron-mock-api/blob/main/LICENSE">
+        <img
+            alt="MIT license"
+            src="https://img.shields.io/npm/l/chonky?style=flat&colorB=dcd67a"
+        />
+    </a>
+    <a href="https://github.com/lixin59/electron-mock-api">
+        <img
+            alt="GitHub stars"
+            src="https://img.shields.io/github/stars/lixin59/electron-mock-api?style=flat&colorB=50f4cc"
+        />
+    </a>
+    <a href="https://github.com/lixin59/electron-mock-api">
+        <img src="https://img.shields.io/github/last-commit/lixin59/electron-mock-api.svg?style=flat-square">
+    </a>
+    <a href="https://github.com/lixin59/electron-mock-api">
+        <img src="https://img.shields.io/github/last-commit/lixin59/electron-mock-api.svg?style=flat-square">
+    </a>
+    <img src="https://img.shields.io/github/commit-activity/y/lixin59/electron-mock-api?style=flat-square">
+    <br />
+    <img src="https://img.shields.io/github/issues/lixin59/electron-mock-api?style=flat-square">
+    <img src="https://img.shields.io/github/issues-closed-raw/lixin59/electron-mock-api?style=flat-square">
+    <img src="https://img.shields.io/github/forks/lixin59/electron-mock-api?style=flat-square">
+    <img src="https://img.shields.io/github/watchers/lixin59/electron-mock-api?style=flat-square">
+    <br />
+</p>
+<p align="center">
+  <a href="https://github.com/lixin59/electron-mock-api/tree/main/docs">文档</a>
+  ·
+  <a href="https://github.com/lixin59/electron-mock-api/releases">下载</a>
+</p>
 
 ## 特性
 1. 日志记录
