@@ -21,6 +21,75 @@
 
 - [使用说明](./docs/readme.md)
 
+
+## 项目数据
+本产品所有的数据文件用户目录下的`.app-mock-admin`文件夹中
+
+### 日志文件
+- windows `C:\Users\<username>\.app-mock-admin\logs\`
+- linux `/home/<username>/.app-mock-admin/logs/`
+
+### 接口数据
+本产品的接口和项目通过json文件进行管理文件地址在用户目录下
+- windows `C:\Users\<username>\.app-mock-admin\projects\`
+- linux `/home/<username>/.app-mock-admin/projects/`
+```json
+{
+    "config": {
+        "projectName": "测试项目",
+        "baseUrl": "/api/v1",
+        "port": 8080,
+        "createdAt": 1678707592401,
+        "id": 1678707592401,
+        "lastUpdateAt": 1678707592401
+    },
+    "mockList": [
+        {
+            "name": "接口1",
+            "enable": true,
+            "url": "/test",
+            "id": 1678707725807,
+            "method": "get",
+            "createdAt": 1678707725807,
+            "lastUpdateAt": 1678708199903,
+            "data": "{\"code\":200,\"msg\":\"test\",\"data\":{\"list|1-10\":[{\"id|+1\":1}]}}",
+            "rules": [
+                {
+                    "name": "name",
+                    "key": 0,
+                    "type": "string",
+                    "required": true,
+                    "message": "缺少name字段或者字段类型不正确"
+                }
+            ],
+            "timeout": 1000,
+            "responseType": "json"
+        },
+        {
+            "name": "接口2",
+            "enable": true,
+            "url": "/test",
+            "id": 1678708519562,
+            "method": "post",
+            "createdAt": 1678708519562,
+            "lastUpdateAt": 1678708529198,
+            "data": "{\"code\":200,\"msg\":\"test\",\"data\":{\"list|1-10\":[{\"id|+1\":1}]}}",
+            "rules": [
+                {
+                    "name": "",
+                    "key": 0,
+                    "type": "string",
+                    "required": false,
+                    "message": ""
+                }
+            ],
+            "timeout": 1000,
+            "responseType": "json"
+        }
+    ]
+}
+```
+
 ## 项目示例图
 ![接口列表](./docs/apilist.png)
 ![端口占用](./docs/add-project-err.png)
